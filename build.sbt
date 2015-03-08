@@ -16,8 +16,10 @@ crossPaths := false
 javacOptions ++= Seq("-Xdoclint:none")
 
 libraryDependencies ++= Seq(
-	"org.teavm" % "teavm-dom" % "0.2.1",
-	"org.teavm" % "teavm-html4j" % "0.2.1"
+	"org.teavm" % "teavm-classlib" % "0.2.1" % "provided",
+	"org.teavm" % "teavm-jso" % "0.2.1" % "provided",
+	"org.teavm" % "teavm-dom" % "0.2.1" % "provided",
+	"org.teavm" % "teavm-html4j" % "0.2.1" % "provided"
 )
 
 libraryDependencies ++= Seq(

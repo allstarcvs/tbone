@@ -33,3 +33,16 @@ publishTo := {
   else
 	Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
 }
+
+// retrolambda
+lazy val retroLambdaTask = taskKey[Unit]("Enhance classes with retrolambda.")
+
+retroLambdaTask := {
+  (compile in Compile).value
+  println("This is retro lambda")
+}
+
+packageBin in Compile := {
+  retroLambdaTask.value
+  (packageBin in Compile).value
+}

@@ -2,6 +2,7 @@ package com.allstarcvs.tbone;
 
 import net.java.html.js.JavaScriptBody;
 
+import org.teavm.dom.ajax.ReadyStateChangeHandler;
 import org.teavm.dom.ajax.XMLHttpRequest;
 import org.teavm.dom.html.HTMLDocument;
 import org.teavm.jso.JS;
@@ -11,6 +12,7 @@ import com.allstarcvs.tbone.wrappers.Globals;
 import com.allstarcvs.tbone.wrappers.Page;
 import com.allstarcvs.tbone.wrappers.PageCallback;
 import com.allstarcvs.tbone.wrappers.PageCallbackWithId;
+import com.allstarcvs.tbone.wrappers.PageContext;
 
 public class TBone {
 
@@ -21,26 +23,54 @@ public class TBone {
 	// Page.js Helpers
 	// ====================================================================================================
 
+	/**
+	 * Requires page.js
+	 */
 	public static void page(final String path, final PageCallback callback) {
 		globals.page(path, callback);
 	}
 
+	/**
+	 * Requires page.js
+	 */
 	public static void page(final String path, final Runnable callback) {
-		globals.page(path, (ctx, next) -> callback.run());
+		globals.page(path, new PageCallback() {
+			@Override
+			public void run(final PageContext ctx, final PageCallback next) {
+				callback.run();
+			}
+		});
 	}
 
+	/**
+	 * Requires page.js
+	 */
 	public static void page(final String path, final PageCallbackWithId callback) {
 		// TODO extract the parameter name from the path
-		globals.page(path, (ctx, next) -> callback.run(asString(ctx.getParams(), "id")));
+		globals.page(path, new PageCallback() {
+			@Override
+			public void run(final PageContext ctx, final PageCallback next) {
+				callback.run(asString(ctx.getParams(), "id"));
+			}
+		});
 	}
 
+	/**
+	 * Requires page.js
+	 */
 	public static void show(final String path) {
 		page().show(path);
 	}
 
+	/**
+	 * Requires page.js
+	 */
 	@JavaScriptBody(args = {}, body = "page.start({hashbang:true})")
 	public static native void pageStart();
 
+	/**
+	 * Requires page.js
+	 */
 	public static Page page() {
 		return globals.getPage();
 	}
@@ -53,6 +83,9 @@ public class TBone {
 		return JS.get(globals, JS.wrap(name));
 	}
 
+	/**
+	 * Requires jquery.js
+	 */
 	public static JSObject jquery(final String selector) {
 		return globals.jQuery(selector);
 	}
@@ -60,6 +93,9 @@ public class TBone {
 	@JavaScriptBody(args = { "a", "s" }, body = "return a.join(s)")
 	public static native String join(final String[] array, String separator);
 
+	/**
+	 * Requires sprintf.js
+	 */
 	@JavaScriptBody(args = { "f", "a" }, body = "return vsprintf(f, a)")
 	public static native String sprintf(final String format, final Object... arguments);
 
@@ -79,11 +115,22 @@ public class TBone {
 	@JavaScriptBody(args = { "j" }, body = "return JSON.parse(j)")
 	public static native <T extends JSObject> T[] parseJsonArray(String json);
 
+	// ====================================================================================================
+	// ajax
+	// ====================================================================================================
+
+	public static interface XhrResponseHandler {
+		void handle(XMLHttpRequest xhr);
+	}
+
 	public static void ajaxGet(final String url, final XhrResponseHandler handler) {
 		final XMLHttpRequest xhr = globals.createXMLHttpRequest();
-		xhr.setOnReadyStateChange(() -> {
-			if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-				handler.handle(xhr);
+		xhr.setOnReadyStateChange(new ReadyStateChangeHandler() {
+			@Override
+			public void stateChanged() {
+				if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+					handler.handle(xhr);
+				}
 			}
 		});
 		xhr.open("GET", url);
@@ -95,9 +142,12 @@ public class TBone {
 	 */
 	public static void ajaxPost(final String url, final JSObject data, final XhrResponseHandler handler) {
 		final XMLHttpRequest xhr = globals.createXMLHttpRequest();
-		xhr.setOnReadyStateChange(() -> {
-			if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-				handler.handle(xhr);
+		xhr.setOnReadyStateChange(new ReadyStateChangeHandler() {
+			@Override
+			public void stateChanged() {
+				if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+					handler.handle(xhr);
+				}
 			}
 		});
 		xhr.open("POST", url);
@@ -107,9 +157,12 @@ public class TBone {
 
 	public static void ajax(final String method, final String url, final XhrResponseHandler handler) {
 		final XMLHttpRequest xhr = globals.createXMLHttpRequest();
-		xhr.setOnReadyStateChange(() -> {
-			if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-				handler.handle(xhr);
+		xhr.setOnReadyStateChange(new ReadyStateChangeHandler() {
+			@Override
+			public void stateChanged() {
+				if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+					handler.handle(xhr);
+				}
 			}
 		});
 		xhr.open(method, url);
@@ -119,6 +172,12 @@ public class TBone {
 	// ====================================================================================================
 	// Utilities
 	// ====================================================================================================
+
+	/**
+	 * return Object.keys(obj)
+	 */
+	@JavaScriptBody(args = { "o" }, body = "return Object.keys(o);")
+	public static native String[] keys(JSObject obj);
 
 	public static String asString(final JSObject object, final String field) {
 		return JS.unwrapString(JS.get(object, JS.wrap(field)));

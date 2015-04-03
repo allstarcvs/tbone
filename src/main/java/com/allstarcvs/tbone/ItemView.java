@@ -14,7 +14,7 @@ public class ItemView extends View {
 	}
 
 	@Override
-	public UiNode<?> render() {
+	public UiNode<?> onRender() {
 		return el;
 	}
 }

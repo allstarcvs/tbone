@@ -5,9 +5,13 @@ import com.allstarcvs.tbone.elements.UiNode;
 
 public abstract class View {
 
-	protected UiNode<?> el;
+	UiNode<?> el;
 
-	public abstract UiNode<?> render();
+	public final UiNode<?> render() {
+		return el = onRender();
+	}
+
+	protected abstract UiNode<?> onRender();
 
 	/**
 	 * Override this method to execute scripts after showing this view. Be sure to call super.onShow() to execute the

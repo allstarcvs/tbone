@@ -5,10 +5,12 @@ import net.java.html.js.JavaScriptBody;
 import org.teavm.dom.ajax.ReadyStateChangeHandler;
 import org.teavm.dom.ajax.XMLHttpRequest;
 import org.teavm.dom.html.HTMLDocument;
+import org.teavm.dom.html.HTMLElement;
 import org.teavm.jso.JS;
 import org.teavm.jso.JSObject;
 
 import com.allstarcvs.tbone.wrappers.Globals;
+import com.allstarcvs.tbone.wrappers.JQuery;
 import com.allstarcvs.tbone.wrappers.Page;
 import com.allstarcvs.tbone.wrappers.PageCallback;
 import com.allstarcvs.tbone.wrappers.PageCallbackWithId;
@@ -86,8 +88,15 @@ public class TBone {
 	/**
 	 * Requires jquery.js
 	 */
-	public static JSObject jquery(final String selector) {
+	public static JQuery jquery(final String selector) {
 		return globals.jQuery(selector);
+	}
+
+	/**
+	 * Requires jquery.js
+	 */
+	public static JQuery jquery(final HTMLElement object) {
+		return globals.jQuery(object);
 	}
 
 	@JavaScriptBody(args = { "a", "s" }, body = "return a.join(s)")

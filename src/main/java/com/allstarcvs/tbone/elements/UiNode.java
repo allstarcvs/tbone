@@ -3,7 +3,6 @@ package com.allstarcvs.tbone.elements;
 import static com.allstarcvs.tbone.TBone.*;
 
 import org.teavm.dom.core.Node;
-import org.teavm.dom.core.NodeList;
 import org.teavm.dom.events.EventListener;
 import org.teavm.dom.html.HTMLElement;
 
@@ -78,9 +77,8 @@ public class UiNode<T extends UiNode<?>> {
 	 * Remove all children
 	 */
 	public T clear() {
-		final NodeList<Node> childNodes = node.getChildNodes();
-		for (int i = 0; i < childNodes.getLength(); i++) {
-			node.removeChild(childNodes.item(i));
+		while (node.hasChildNodes()) {
+			node.removeChild(node.getLastChild());
 		}
 		return (T) this;
 	}
@@ -101,6 +99,11 @@ public class UiNode<T extends UiNode<?>> {
 
 	public T attr(final String attr, final String value) {
 		node.setAttribute(attr, value);
+		return (T) this;
+	}
+
+	public T data(final String name, final String value) {
+		node.setAttribute("data-" + name, value);
 		return (T) this;
 	}
 

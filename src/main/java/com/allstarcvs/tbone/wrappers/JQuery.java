@@ -15,4 +15,8 @@ public interface JQuery extends JSObject {
 	public JQuery text(String text);
 
 	public String text();
+
+	public JQuery show();
+
+	public JQuery hide();
 }

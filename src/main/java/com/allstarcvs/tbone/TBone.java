@@ -102,6 +102,9 @@ public class TBone {
 	@JavaScriptBody(args = { "a", "s" }, body = "return a.join(s)")
 	public static native String join(final String[] array, String separator);
 
+	@JavaScriptBody(args = { "t", "s" }, body = "return t.split(s)")
+	public static native String[] split(final String text, String separator);
+
 	/**
 	 * Requires sprintf.js
 	 */

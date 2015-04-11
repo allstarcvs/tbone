@@ -2,6 +2,9 @@ package com.allstarcvs.tbone.elements;
 
 import static com.allstarcvs.tbone.elements.UiNode.*;
 
+import org.teavm.dom.events.Event;
+import org.teavm.dom.events.EventListener;
+
 import com.allstarcvs.tbone.TBone;
 
 public class SemanticUi {
@@ -28,6 +31,10 @@ public class SemanticUi {
 
 	public static UiCommon strong(final String text) {
 		return element("strong").text(text);
+	}
+
+	public static UiCommon div(final String classes) {
+		return element("div").attr("class", classes);
 	}
 
 	public static UiCommon br() {
@@ -63,14 +70,14 @@ public class SemanticUi {
 	 *            top/bottom attached, right/left floated, <i>color</i>, inverted,
 	 */
 	public static UiCommon header(final String... variations) {
-		return element("div").attr("class", join(variations) + "header");
+		return div(join(variations) + "header");
 	}
 
 	/**
 	 * Append this to a header().content() element.
 	 */
 	public static UiCommon subHeader(final String... variations) {
-		return element("div").attr("class", join(variations) + "sub header");
+		return div(join(variations) + "sub header");
 	}
 
 	public static UiCommon h1(final String text) {
@@ -119,7 +126,7 @@ public class SemanticUi {
 	 *            circular, top/bottom/left/right attached, submit
 	 */
 	public static UiCommon button(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "button");
+		return div("ui " + join(variations) + "button");
 	}
 
 	/**
@@ -156,7 +163,7 @@ public class SemanticUi {
 	 *            vertical, <i>n</i> fluid, <i>color</i>, basic, <i>size</i>
 	 */
 	public static UiCommon buttons(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "buttons");
+		return div("ui " + join(variations) + "buttons");
 	}
 
 	/**
@@ -166,11 +173,11 @@ public class SemanticUi {
 	 *            vertical, <i>color</i>, basic, <i>size</i>
 	 */
 	public static UiCommon buttons(final int fluid, final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + numbers[fluid] + " fluid buttons");
+		return div("ui " + join(variations) + numbers[fluid] + " fluid buttons");
 	}
 
 	public static UiCommon orDivider() {
-		return element("div").attr("class", "or");
+		return div("or");
 	}
 
 	// ====================================================================================================
@@ -184,7 +191,7 @@ public class SemanticUi {
 	 *            vertical, horizontal, inverted, fitted, hidden, section, clearing
 	 */
 	public static UiCommon divider(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "divider");
+		return div("ui " + join(variations) + "divider");
 	}
 
 	// ====================================================================================================
@@ -218,7 +225,7 @@ public class SemanticUi {
 	 * Content: image
 	 */
 	public static UiCommon images(final String variations) {
-		return element("div").attr("class", "ui " + join(variations) + " images");
+		return div("ui " + join(variations) + " images");
 	}
 
 	/**
@@ -250,7 +257,7 @@ public class SemanticUi {
 	 *            <i>size</i>
 	 */
 	public static UiInput input(final String... variations) {
-		return new UiInput(element("div").attr("class", "ui " + join(variations) + "input"));
+		return new UiInput(div("ui " + join(variations) + "input"));
 	}
 
 	// ====================================================================================================
@@ -261,7 +268,7 @@ public class SemanticUi {
 	 * Content: label
 	 */
 	public static UiCommon labels(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "labels");
+		return div("ui " + join(variations) + "labels");
 	}
 
 	/**
@@ -272,11 +279,11 @@ public class SemanticUi {
 	 *            top/bottom left/right attached, horizontal, circular, floating
 	 */
 	public static UiCommon label(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "label");
+		return div("ui " + join(variations) + "label");
 	}
 
 	public static UiCommon detail(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "detail");
+		return div("ui " + join(variations) + "detail");
 	}
 
 	// ====================================================================================================
@@ -288,7 +295,7 @@ public class SemanticUi {
 	 *
 	 */
 	public static UiCommon dimmerWithLoader(final String... variations) {
-		return element("div").attr("class", "ui active dimmer")
+		return div("ui active dimmer")
 				.add(loader(join(variations)));
 
 	}
@@ -298,7 +305,7 @@ public class SemanticUi {
 	 *            text, indeterminate, disabled, inline, <i>size</i>, inverted,
 	 */
 	public static UiCommon loader(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "loader");
+		return div("ui " + join(variations) + "loader");
 
 	}
 
@@ -313,7 +320,7 @@ public class SemanticUi {
 	 *            left/right, internal, dividing, attached, [very] close,
 	 */
 	public static UiCommon rail(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "rail");
+		return div("ui " + join(variations) + "rail");
 	}
 
 	// ====================================================================================================
@@ -334,7 +341,7 @@ public class SemanticUi {
 	 */
 	public static UiCommon reveal(final UiNode<?> visibleContent, final UiNode<?> hiddenContent, final String type,
 			final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + type + " reveal").add(
+		return div("ui " + join(variations) + type + " reveal").add(
 				visibleContent,
 				hiddenContent);
 	}
@@ -347,7 +354,7 @@ public class SemanticUi {
 	 * Content: segment
 	 */
 	public static UiCommon segments(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "segments");
+		return div("ui " + join(variations) + "segments");
 	}
 
 	/**
@@ -357,7 +364,7 @@ public class SemanticUi {
 	 *            left/right/center aligned, basic,
 	 */
 	public static UiCommon segment(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "segment");
+		return div("ui " + join(variations) + "segment");
 	}
 
 	// ====================================================================================================
@@ -371,7 +378,7 @@ public class SemanticUi {
 	 *            ordered, vertical,tablet stackable, fluid, <i>size</i>, <i>number</i>
 	 */
 	public static UiCommon steps(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "steps");
+		return div("ui " + join(variations) + "steps");
 	}
 
 	/**
@@ -381,7 +388,7 @@ public class SemanticUi {
 	 *            ordered, vertical,tablet stackable, fluid, <i>size</i>
 	 */
 	public static UiCommon steps(final int steps, final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + numbers[steps] + " steps");
+		return div("ui " + join(variations) + numbers[steps] + " steps");
 	}
 
 	/**
@@ -389,7 +396,7 @@ public class SemanticUi {
 	 *            active, disabled, completed, link
 	 */
 	public static UiCommon step(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "step");
+		return div("ui " + join(variations) + "step");
 	}
 
 	// ====================================================================================================
@@ -403,7 +410,7 @@ public class SemanticUi {
 	 *            <i>size</i>
 	 */
 	public static UiCommon breadcrumb(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "breadcrumb");
+		return div("ui " + join(variations) + "breadcrumb");
 	}
 
 	/**
@@ -411,7 +418,7 @@ public class SemanticUi {
 	 *            active
 	 */
 	public static UiCommon bcSection(final String... variations) {
-		return element("div").attr("class", join(variations) + "section");
+		return div(join(variations) + "section");
 	}
 
 	/**
@@ -419,7 +426,7 @@ public class SemanticUi {
 	 *            active
 	 */
 	public static UiCommon bcDivider(final String... variations) {
-		return element("div").attr("class", join(variations) + "divider");
+		return div(join(variations) + "divider");
 	}
 
 	// ====================================================================================================
@@ -433,14 +440,14 @@ public class SemanticUi {
 	 *            loading, error, warning, fluid, small/large, inverted
 	 */
 	public static UiCommon form(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "form");
+		return div("ui " + join(variations) + "form");
 	}
 
 	/**
 	 * @see form()
 	 */
 	public static UiCommon formWithSegment(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "form segment");
+		return div("ui " + join(variations) + "form segment");
 	}
 
 	/**
@@ -448,7 +455,7 @@ public class SemanticUi {
 	 *            grouped, inline, <i>number</i>
 	 */
 	public static UiCommon fields(final String... variations) {
-		return element("div").attr("class", join(variations) + "fields");
+		return div(join(variations) + "fields");
 	}
 
 	/**
@@ -456,7 +463,7 @@ public class SemanticUi {
 	 *            grouped, inline
 	 */
 	public static UiCommon fields(final int fields, final String... variations) {
-		return element("div").attr("class", join(variations) + numbers[fields] + " fields");
+		return div(join(variations) + numbers[fields] + " fields");
 	}
 
 	/**
@@ -464,7 +471,7 @@ public class SemanticUi {
 	 *            inline, error, disabled, <i>n</i> wide, required,
 	 */
 	public static UiCommon field(final String... variations) {
-		return element("div").attr("class", join(variations) + "field");
+		return div(join(variations) + "field");
 	}
 
 	/**
@@ -472,7 +479,7 @@ public class SemanticUi {
 	 *            inline, error, disabled, required,
 	 */
 	public static UiCommon field(final int wide, final String... variations) {
-		return element("div").attr("class", join(variations) + numbers[wide] + " wide field");
+		return div(join(variations) + numbers[wide] + " wide field");
 	}
 
 	/**
@@ -487,7 +494,12 @@ public class SemanticUi {
 	 */
 	public static UiInput textField(final Object value, final InputEventHandler changeHandler) {
 		final UiInput input = new UiInput(element("input").attr("type", "text")).value(value);
-		if (changeHandler != null) input.change(e -> changeHandler.handle(input));
+		if (changeHandler != null) input.change(new EventListener() {
+			@Override
+			public void handleEvent(final Event e) {
+				changeHandler.handle(input);
+			}
+		});
 		return input;
 	}
 
@@ -510,7 +522,12 @@ public class SemanticUi {
 	public static UiInput numberField(final String format, final Number value, final InputEventHandler changeHandler) {
 		final Object text = (format == null || value == null) ? value : TBone.sprintf(format, value);
 		final UiInput input = new UiInput(element("input").attr("type", "number")).value(text);
-		if (changeHandler != null) input.change(e -> changeHandler.handle(input));
+		if (changeHandler != null) input.change(new EventListener() {
+			@Override
+			public void handleEvent(final Event e) {
+				changeHandler.handle(input);
+			}
+		});
 		return input;
 	}
 
@@ -534,7 +551,12 @@ public class SemanticUi {
 
 	public static UiInput textarea(final String value, final InputEventHandler changeHandler) {
 		final UiInput input = new UiInput(element("textarea")).value(value);
-		if (changeHandler != null) input.change(e -> changeHandler.handle(input));
+		if (changeHandler != null) input.change(new EventListener() {
+			@Override
+			public void handleEvent(final Event e) {
+				changeHandler.handle(input);
+			}
+		});
 		return input;
 	}
 
@@ -552,12 +574,17 @@ public class SemanticUi {
 	 */
 	public static UiDropdown selectionDropdown(final Object value, final InputEventHandler changeHandler) {
 
-		final UiCommon container = element("div").attr("class", "menu");
-		final UiCommon placeholder = element("div").attr("class", "default text");
+		final UiCommon container = div("menu");
+		final UiCommon placeholder = div("default text");
 		final UiInput result = new UiInput(element("input").attr("type", "hidden")).value(value);
-		if (changeHandler != null) result.change(e -> changeHandler.handle(result));
+		if (changeHandler != null) result.change(new EventListener() {
+			@Override
+			public void handleEvent(final Event e) {
+				changeHandler.handle(result);
+			}
+		});
 
-		final UiCommon dropdown = element("div").attr("class", "ui fluid selection dropdown").add(
+		final UiCommon dropdown = div("ui fluid selection dropdown").add(
 				result,
 				placeholder,
 				icon("dropdown"),
@@ -577,7 +604,7 @@ public class SemanticUi {
 	}
 
 	public static UiCommon dropdownOption(final Object value, final String text) {
-		final UiCommon item = element("div").attr("class", "ui item").text(text);
+		final UiCommon item = div("ui item").text(text);
 		if (value == null) return item;
 		return item.attr("data-value", value.toString());
 	}
@@ -609,12 +636,11 @@ public class SemanticUi {
 	 *            radio, toogle, slider
 	 */
 	public static UiCommon checkbox(final String name, final String style, final boolean checked) {
-		return element("div")
-				.attr("class", "ui " + style + " checkbox" + (checked ? " checked" : "")).add(
-						element("input")
-								.attr("type", "radio")
-								.attr("name", name)
-								.attr("checked", checked)
+		return div("ui " + style + " checkbox" + (checked ? " checked" : "")).add(
+				element("input")
+						.attr("type", "radio")
+						.attr("name", name)
+						.attr("checked", checked)
 				)
 				.enable(SemanticUiScripts.CHECKBOX);
 	}
@@ -624,12 +650,11 @@ public class SemanticUi {
 	 * Simple checkbox.
 	 */
 	public static UiCommon checkbox(final String name, final boolean checked) {
-		return element("div")
-				.attr("class", "ui checkbox" + (checked ? " checked" : "")).add(
-						element("input")
-								.attr("type", "checkbox")
-								.attr("name", name)
-								.attr("checked", checked)
+		return div("ui checkbox" + (checked ? " checked" : "")).add(
+				element("input")
+						.attr("type", "checkbox")
+						.attr("name", name)
+						.attr("checked", checked)
 				)
 				.enable(SemanticUiScripts.CHECKBOX);
 	}
@@ -646,7 +671,7 @@ public class SemanticUi {
 	 *            page, padded, <i>n</i> column, stackable
 	 */
 	public static UiCommon grid(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "grid");
+		return div("ui " + join(variations) + "grid");
 	}
 
 	/**
@@ -657,7 +682,7 @@ public class SemanticUi {
 	 *            page, padded, stackable
 	 */
 	public static UiCommon grid(final int column, final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + numbers[column] + " column grid");
+		return div("ui " + join(variations) + numbers[column] + " column grid");
 	}
 
 	/**
@@ -668,7 +693,7 @@ public class SemanticUi {
 	 *            <i>n</i> column, doubling, equal height
 	 */
 	public static UiCommon row(final String... variations) {
-		return element("div").attr("class", join(variations) + "row");
+		return div(join(variations) + "row");
 	}
 
 	/**
@@ -679,7 +704,7 @@ public class SemanticUi {
 	 *            doubling, equal height
 	 */
 	public static UiCommon row(final int column, final String... variations) {
-		return element("div").attr("class", join(variations) + numbers[column] + " column row");
+		return div(join(variations) + numbers[column] + " column row");
 	}
 
 	/**
@@ -690,7 +715,7 @@ public class SemanticUi {
 	 *            <i>n</i> wide mobile/tablet/computer/large screen/widescreen,
 	 */
 	public static UiCommon column(final String... variations) {
-		return element("div").attr("class", join(variations) + "column");
+		return div(join(variations) + "column");
 	}
 
 	/**
@@ -701,7 +726,7 @@ public class SemanticUi {
 	 *            mobile/tablet/computer/large screen/widescreen,
 	 */
 	public static UiCommon column(final int wide, final String... variations) {
-		return element("div").attr("class", join(variations) + numbers[wide] + " wide column");
+		return div(join(variations) + numbers[wide] + " wide column");
 	}
 
 	// ====================================================================================================
@@ -716,7 +741,7 @@ public class SemanticUi {
 	 *            compact, inverted, <i>color</i>, [labeled] icon, fluid, <i>n</i> item, <i>size</i>, borderless
 	 */
 	public static UiCommon menu(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "menu");
+		return div("ui " + join(variations) + "menu");
 	}
 
 	/**
@@ -727,14 +752,14 @@ public class SemanticUi {
 	 *            compact, inverted, <i>color</i>, [labeled] icon, fluid, <i>size</i>, borderless
 	 */
 	public static UiCommon menu(final int item, final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + numbers[item] + " item menu");
+		return div("ui " + join(variations) + numbers[item] + " item menu");
 	}
 
 	/**
 	 * @see menu()
 	 */
 	public static UiCommon nestedMenu(final String... variations) {
-		return element("div").attr("class", join(variations) + "menu");
+		return div(join(variations) + "menu");
 	}
 
 	/**
@@ -745,7 +770,7 @@ public class SemanticUi {
 	 *            <i>size</i>
 	 */
 	public static UiCommon list(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "list");
+		return div("ui " + join(variations) + "list");
 	}
 
 	/**
@@ -755,7 +780,7 @@ public class SemanticUi {
 	 *            divided,
 	 */
 	public static UiCommon items(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "items");
+		return div("ui " + join(variations) + "items");
 	}
 
 	/**
@@ -766,7 +791,7 @@ public class SemanticUi {
 	 *            horizontally/vertically fitted
 	 */
 	public static UiCommon item(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "item");
+		return div("ui " + join(variations) + "item");
 	}
 
 	/**
@@ -776,23 +801,23 @@ public class SemanticUi {
 	 *            [top] aligned, visible, hidden
 	 */
 	public static UiCommon content(final String... variations) {
-		return element("div").attr("class", join(variations) + "content");
+		return div(join(variations) + "content");
 	}
 
 	public static UiCommon title(final String... variations) {
-		return element("div").attr("class", join(variations) + "title");
+		return div(join(variations) + "title");
 	}
 
 	public static UiCommon meta(final String... variations) {
-		return element("div").attr("class", join(variations) + "meta");
+		return div(join(variations) + "meta");
 	}
 
 	public static UiCommon description(final String... variations) {
-		return element("div").attr("class", join(variations) + "description");
+		return div(join(variations) + "description");
 	}
 
 	public static UiCommon extra(final String... variations) {
-		return element("div").attr("class", join(variations) + "extra");
+		return div(join(variations) + "extra");
 	}
 
 	// ====================================================================================================
@@ -805,7 +830,7 @@ public class SemanticUi {
 	 *            info / warning / error / success /positive / negative,
 	 */
 	public static UiCommon message(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "message")
+		return div("ui " + join(variations) + "message")
 				.enable(SemanticUiScripts.MESSAGE_CLOSE);
 	}
 
@@ -905,7 +930,7 @@ public class SemanticUi {
 	 *            centered, mobile, test
 	 */
 	public static UiCommon ad(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "ad");
+		return div("ui " + join(variations) + "ad");
 	}
 
 	// ====================================================================================================
@@ -919,7 +944,7 @@ public class SemanticUi {
 	 *            <i>number</i>, doubling
 	 */
 	public static UiCommon cards(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "cards");
+		return div("ui " + join(variations) + "cards");
 	}
 
 	/**
@@ -929,7 +954,7 @@ public class SemanticUi {
 	 *            doubling
 	 */
 	public static UiCommon cards(final int n, final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + numbers[n] + " cards");
+		return div("ui " + join(variations) + numbers[n] + " cards");
 	}
 
 	/**
@@ -939,7 +964,7 @@ public class SemanticUi {
 	 *            link, fluid, <i>color</i>
 	 */
 	public static UiCommon card(final String... variations) {
-		return element("div").attr("class", join(variations) + "card");
+		return div(join(variations) + "card");
 	}
 
 	// ====================================================================================================
@@ -953,7 +978,7 @@ public class SemanticUi {
 	 *            collapsed, threaded, minimal
 	 */
 	public static UiCommon comments(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "comments");
+		return div("ui " + join(variations) + "comments");
 	}
 
 	/**
@@ -962,7 +987,7 @@ public class SemanticUi {
 	 * @param variations
 	 */
 	public static UiCommon comment(final String... variations) {
-		return element("div").attr("class", join(variations) + "comment");
+		return div(join(variations) + "comment");
 	}
 
 	// ====================================================================================================
@@ -976,7 +1001,7 @@ public class SemanticUi {
 	 *            <i>size</i>
 	 */
 	public static UiCommon feed(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "feed");
+		return div("ui " + join(variations) + "feed");
 	}
 
 	/**
@@ -985,7 +1010,7 @@ public class SemanticUi {
 	 * @param variations
 	 */
 	public static UiCommon event(final String... variations) {
-		return element("div").attr("class", join(variations) + "event");
+		return div(join(variations) + "event");
 	}
 
 	// ====================================================================================================
@@ -998,7 +1023,7 @@ public class SemanticUi {
 	 * @param variations
 	 */
 	public static UiCommon statistics(final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "statistics");
+		return div("ui " + join(variations) + "statistics");
 	}
 
 	/**
@@ -1008,17 +1033,17 @@ public class SemanticUi {
 	 *            horizontal, <i>color</i>, inverted, right/left floated, <i>size</i>
 	 */
 	public static UiCommon statistic(final String... variations) {
-		return element("div").attr("class", join(variations) + "statistic");
+		return div(join(variations) + "statistic");
 	}
 
 	// ====================================================================================================
 	// modal
 	// ====================================================================================================
 	public static UiCommon modal(final String id, final String... variations) {
-		return element("div").attr("class", "ui " + join(variations) + "modal").attr("id", id);
+		return div("ui " + join(variations) + "modal").attr("id", id);
 	}
 
 	public static UiCommon actions(final String... variations) {
-		return element("div").attr("class", join(variations) + "actions");
+		return div(join(variations) + "actions");
 	}
 }

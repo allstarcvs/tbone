@@ -11,4 +11,8 @@ public interface JQuery extends JSObject {
 	public String data(String key);
 
 	public JQuery data(final String key, String value);
+
+	public JQuery text(String text);
+
+	public String text();
 }

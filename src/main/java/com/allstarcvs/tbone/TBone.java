@@ -9,6 +9,7 @@ import org.teavm.dom.html.HTMLElement;
 import org.teavm.jso.JS;
 import org.teavm.jso.JSObject;
 
+import com.allstarcvs.tbone.elements.UiNode;
 import com.allstarcvs.tbone.wrappers.Globals;
 import com.allstarcvs.tbone.wrappers.JQuery;
 import com.allstarcvs.tbone.wrappers.Page;
@@ -97,6 +98,10 @@ public class TBone {
 	 */
 	public static JQuery jquery(final HTMLElement object) {
 		return globals.jQuery(object);
+	}
+
+	public static JQuery jquery(final UiNode<?> node) {
+		return jquery((HTMLElement) node.node());
 	}
 
 	@JavaScriptBody(args = { "a", "s" }, body = "return a.join(s)")
@@ -188,8 +193,11 @@ public class TBone {
 	/**
 	 * return Object.keys(obj)
 	 */
-	@JavaScriptBody(args = { "o" }, body = "return Object.keys(o);")
+	@JavaScriptBody(args = { "o" }, body = "return Object.keys(o)")
 	public static native String[] keys(JSObject obj);
+
+	@JavaScriptBody(args = {}, body = "return undefined")
+	public static native JSObject undefined();
 
 	public static String asString(final JSObject object, final String field) {
 		final JSObject obj = JS.get(object, JS.wrap(field));

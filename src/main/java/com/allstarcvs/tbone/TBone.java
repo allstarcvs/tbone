@@ -192,7 +192,15 @@ public class TBone {
 	public static native String[] keys(JSObject obj);
 
 	public static String asString(final JSObject object, final String field) {
-		return JS.unwrapString(JS.get(object, JS.wrap(field)));
+		final JSObject obj = JS.get(object, JS.wrap(field));
+		if (obj == null) return null;
+		return JS.unwrapString(obj);
+	}
+
+	public static String asStringNotNull(final JSObject object, final String field) {
+		final String text = asString(object, field);
+		if (text == null) return "";
+		return text;
 	}
 
 	public static int asInt(final JSObject object, final String field) {

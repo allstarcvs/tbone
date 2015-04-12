@@ -110,6 +110,9 @@ public class TBone {
 	@JavaScriptBody(args = { "t", "s" }, body = "return t.split(s)")
 	public static native String[] split(final String text, String separator);
 
+	@JavaScriptBody(args = { "s1", "s2" }, body = "return s1.indexOf(s2) > -1")
+	public static native boolean contains(final String str1, String str2);
+
 	/**
 	 * Requires sprintf.js
 	 */

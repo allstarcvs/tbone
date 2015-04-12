@@ -8,6 +8,7 @@ import org.teavm.dom.html.HTMLElement;
 
 import com.allstarcvs.tbone.TBone;
 import com.allstarcvs.tbone.View;
+import com.allstarcvs.tbone.wrappers.JQuery;
 
 @SuppressWarnings("unchecked")
 public class UiNode<T extends UiNode<?>> {
@@ -27,6 +28,10 @@ public class UiNode<T extends UiNode<?>> {
 
 	public Node node() {
 		return node;
+	}
+
+	public JQuery jquery() {
+		return TBone.jquery(node);
 	}
 
 	public static UiCommon body() {

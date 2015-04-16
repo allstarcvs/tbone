@@ -1,21 +1,26 @@
 package com.allstarcvs.tbone;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.java.html.js.JavaScriptBody;
 
-import org.teavm.dom.ajax.ReadyStateChangeHandler;
 import org.teavm.dom.ajax.XMLHttpRequest;
+import org.teavm.dom.core.Node;
+import org.teavm.dom.core.NodeList;
 import org.teavm.dom.html.HTMLDocument;
 import org.teavm.dom.html.HTMLElement;
 import org.teavm.jso.JS;
 import org.teavm.jso.JSObject;
 
 import com.allstarcvs.tbone.elements.UiNode;
+import com.allstarcvs.tbone.mutations.MutationObserver;
+import com.allstarcvs.tbone.mutations.MutationObserverOptions;
 import com.allstarcvs.tbone.wrappers.Globals;
 import com.allstarcvs.tbone.wrappers.JQuery;
 import com.allstarcvs.tbone.wrappers.Page;
 import com.allstarcvs.tbone.wrappers.PageCallback;
 import com.allstarcvs.tbone.wrappers.PageCallbackWithId;
-import com.allstarcvs.tbone.wrappers.PageContext;
 
 public class TBone {
 
@@ -37,12 +42,7 @@ public class TBone {
 	 * Requires page.js
 	 */
 	public static void page(final String path, final Runnable callback) {
-		globals.page(path, new PageCallback() {
-			@Override
-			public void run(final PageContext ctx, final PageCallback next) {
-				callback.run();
-			}
-		});
+		globals.page(path, (ctx, next) -> callback.run());
 	}
 
 	/**
@@ -50,12 +50,7 @@ public class TBone {
 	 */
 	public static void page(final String path, final PageCallbackWithId callback) {
 		// TODO extract the parameter name from the path
-		globals.page(path, new PageCallback() {
-			@Override
-			public void run(final PageContext ctx, final PageCallback next) {
-				callback.run(asString(ctx.getParams(), "id"));
-			}
-		});
+		globals.page(path, (ctx, next) -> callback.run(asString(ctx.getParams(), "id")));
 	}
 
 	/**
@@ -76,6 +71,45 @@ public class TBone {
 	 */
 	public static Page page() {
 		return globals.getPage();
+	}
+
+	// ====================================================================================================
+	// DOM Events - Mutation Observer
+	// ====================================================================================================
+
+	private static final Map<Integer, Runnable> handlers = new HashMap<>();
+	private static int nextId = 0;
+
+	/**
+	 * Start the mutation observer for UiNodes.
+	 */
+	public static void startObserver() {
+		final MutationObserver mo = globals.createMutationObserver(mutations -> {
+			for (int i = 0; i < mutations.getLength(); i++) {
+				final NodeList<Node> addedNodes = mutations.get(i).getAddedNodes();
+				for (int j = 0; j < addedNodes.getLength(); j++) {
+					jquery((HTMLElement) addedNodes.get(j))
+							.find("[data-tbone-id]")
+							.each((index, e) -> {
+								final int myId = Integer.valueOf(e.getAttribute("data-tbone-id"));
+								if (handlers.containsKey(myId)) {
+									handlers.get(myId).run();
+									handlers.remove(myId);
+								}
+							});
+				}
+			}
+		});
+		final MutationObserverOptions options = (MutationObserverOptions) globals.newObject();
+		options.setSubtree(true);
+		options.setChildList(true);
+		mo.observe(document.getBody(), options);
+	}
+
+	public static void observe(final UiNode<?> node, final Runnable handler) {
+		final int myId = nextId++;
+		node.data("tbone-id", myId);
+		handlers.put(myId, handler);
 	}
 
 	// ====================================================================================================
@@ -101,7 +135,7 @@ public class TBone {
 	}
 
 	public static JQuery jquery(final UiNode<?> node) {
-		return jquery((HTMLElement) node.node());
+		return jquery(node.node());
 	}
 
 	@JavaScriptBody(args = { "a", "s" }, body = "return a.join(s)")
@@ -145,12 +179,9 @@ public class TBone {
 
 	public static void ajaxGet(final String url, final XhrResponseHandler handler) {
 		final XMLHttpRequest xhr = globals.createXMLHttpRequest();
-		xhr.setOnReadyStateChange(new ReadyStateChangeHandler() {
-			@Override
-			public void stateChanged() {
-				if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-					handler.handle(xhr);
-				}
+		xhr.setOnReadyStateChange(() -> {
+			if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+				handler.handle(xhr);
 			}
 		});
 		xhr.open("GET", url);
@@ -162,12 +193,9 @@ public class TBone {
 	 */
 	public static void ajaxPost(final String url, final JSObject data, final XhrResponseHandler handler) {
 		final XMLHttpRequest xhr = globals.createXMLHttpRequest();
-		xhr.setOnReadyStateChange(new ReadyStateChangeHandler() {
-			@Override
-			public void stateChanged() {
-				if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-					handler.handle(xhr);
-				}
+		xhr.setOnReadyStateChange(() -> {
+			if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+				handler.handle(xhr);
 			}
 		});
 		xhr.open("POST", url);
@@ -177,12 +205,9 @@ public class TBone {
 
 	public static void ajax(final String method, final String url, final XhrResponseHandler handler) {
 		final XMLHttpRequest xhr = globals.createXMLHttpRequest();
-		xhr.setOnReadyStateChange(new ReadyStateChangeHandler() {
-			@Override
-			public void stateChanged() {
-				if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-					handler.handle(xhr);
-				}
+		xhr.setOnReadyStateChange(() -> {
+			if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+				handler.handle(xhr);
 			}
 		});
 		xhr.open(method, url);
@@ -193,14 +218,23 @@ public class TBone {
 	// Utilities
 	// ====================================================================================================
 
-	/**
-	 * return Object.keys(obj)
-	 */
 	@JavaScriptBody(args = { "o" }, body = "return Object.keys(o)")
 	public static native String[] keys(JSObject obj);
 
+	@JavaScriptBody(args = { "o" }, body = "return o === undefined")
+	public static native boolean isUndefined(JSObject obj);
+
+	@JavaScriptBody(args = { "o" }, body = "return o === undefined")
+	public static native boolean isUndefined(JSObject[] obj);
+
 	@JavaScriptBody(args = {}, body = "return undefined")
 	public static native JSObject undefined();
+
+	@JavaScriptBody(args = { "o" }, body = "console.log(o)")
+	public static native void log(JSObject obj);
+
+	@JavaScriptBody(args = { "o" }, body = "console.log(o)")
+	public static native void log(JSObject[] obj);
 
 	public static String asString(final JSObject object, final String field) {
 		final JSObject obj = JS.get(object, JS.wrap(field));

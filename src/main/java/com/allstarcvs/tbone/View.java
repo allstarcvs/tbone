@@ -1,6 +1,5 @@
 package com.allstarcvs.tbone;
 
-import com.allstarcvs.tbone.elements.SemanticUiScripts;
 import com.allstarcvs.tbone.elements.UiNode;
 
 public abstract class View {
@@ -18,12 +17,11 @@ public abstract class View {
 	 * default semantic-ui scripts.
 	 */
 	public void onShow() {
-		SemanticUiScripts.execute(el);
+		// TBone library uses MutationObserver to run scripts on show.
 	}
 
 	public final void show(final View view) {
 		if (el == null) return;
-
 		el.clear().add(view);
 	}
 

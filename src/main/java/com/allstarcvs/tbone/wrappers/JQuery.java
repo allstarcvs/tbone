@@ -19,4 +19,9 @@ public interface JQuery extends JSObject {
 	public JQuery show();
 
 	public JQuery hide();
+
+	public JQuery find(String selector);
+
+	public JQuery each(JQueryFindCallback callback);
+
 }

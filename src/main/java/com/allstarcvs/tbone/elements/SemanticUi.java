@@ -2,9 +2,6 @@ package com.allstarcvs.tbone.elements;
 
 import static com.allstarcvs.tbone.elements.UiNode.*;
 
-import org.teavm.dom.events.Event;
-import org.teavm.dom.events.EventListener;
-
 import com.allstarcvs.tbone.TBone;
 
 public class SemanticUi {
@@ -494,12 +491,7 @@ public class SemanticUi {
 	 */
 	public static UiInput textField(final Object value, final InputEventHandler changeHandler) {
 		final UiInput input = new UiInput(element("input").attr("type", "text")).value(value);
-		if (changeHandler != null) input.change(new EventListener() {
-			@Override
-			public void handleEvent(final Event e) {
-				changeHandler.handle(input);
-			}
-		});
+		if (changeHandler != null) input.change(e -> changeHandler.handle(input));
 		return input;
 	}
 
@@ -522,12 +514,7 @@ public class SemanticUi {
 	public static UiInput numberField(final String format, final Number value, final InputEventHandler changeHandler) {
 		final Object text = (format == null || value == null) ? value : TBone.sprintf(format, value);
 		final UiInput input = new UiInput(element("input").attr("type", "number")).value(text);
-		if (changeHandler != null) input.change(new EventListener() {
-			@Override
-			public void handleEvent(final Event e) {
-				changeHandler.handle(input);
-			}
-		});
+		if (changeHandler != null) input.change(e -> changeHandler.handle(input));
 		return input;
 	}
 
@@ -551,12 +538,7 @@ public class SemanticUi {
 
 	public static UiInput textarea(final String value, final InputEventHandler changeHandler) {
 		final UiInput input = new UiInput(element("textarea")).value(value);
-		if (changeHandler != null) input.change(new EventListener() {
-			@Override
-			public void handleEvent(final Event e) {
-				changeHandler.handle(input);
-			}
-		});
+		if (changeHandler != null) input.change(e -> changeHandler.handle(input));
 		return input;
 	}
 
@@ -572,24 +554,21 @@ public class SemanticUi {
 	 * @param variations
 	 *            fluid
 	 */
-	public static UiDropdown selectionDropdown(final Object value, final InputEventHandler changeHandler) {
+	public static UiDropdown selectionDropdown(final Object value, final DropdownChangeEventHandler changeHandler) {
 
 		final UiCommon container = div("menu");
 		final UiCommon placeholder = div("default text");
 		final UiInput result = new UiInput(element("input").attr("type", "hidden")).value(value);
-		if (changeHandler != null) result.change(new EventListener() {
-			@Override
-			public void handleEvent(final Event e) {
-				changeHandler.handle(result);
-			}
-		});
 
 		final UiCommon dropdown = div("ui fluid selection dropdown").add(
 				result,
 				placeholder,
 				icon("dropdown"),
-				container)
-				.enable(SemanticUiScripts.DROPDOWN);
+				container);
+
+		final DropdownSettings settings = (DropdownSettings) TBone.globals.newObject();
+		if (changeHandler != null) settings.setOnChange(changeHandler);
+		dropdown.observe(() -> SemanticUiScripts.dropdown(dropdown.node, settings));
 
 		return new UiDropdown(dropdown, container, placeholder, result);
 	}
@@ -621,8 +600,9 @@ public class SemanticUi {
 	 * @return
 	 */
 	public static UiCommon select(final String... variations) {
-		return element("select").attr("class", "ui " + join(variations) + "dropdown")
-				.enable(SemanticUiScripts.DROPDOWN);
+		final UiCommon dropdown = element("select").attr("class", "ui " + join(variations) + "dropdown");
+		final DropdownSettings options = (DropdownSettings) TBone.globals.newObject();
+		return dropdown.observe(() -> SemanticUiScripts.dropdown(dropdown.node, options));
 	}
 
 	public static UiCommon option(final String value) {
@@ -636,13 +616,13 @@ public class SemanticUi {
 	 *            radio, toogle, slider
 	 */
 	public static UiCommon checkbox(final String name, final String style, final boolean checked) {
-		return div("ui " + style + " checkbox" + (checked ? " checked" : "")).add(
+		final UiCommon checkbox = div("ui " + style + " checkbox" + (checked ? " checked" : "")).add(
 				element("input")
 						.attr("type", "radio")
 						.attr("name", name)
 						.attr("checked", checked)
-				)
-				.enable(SemanticUiScripts.CHECKBOX);
+				);
+		return checkbox.observe(() -> SemanticUiScripts.checkbox(checkbox.node));
 	}
 
 	/**
@@ -650,13 +630,13 @@ public class SemanticUi {
 	 * Simple checkbox.
 	 */
 	public static UiCommon checkbox(final String name, final boolean checked) {
-		return div("ui checkbox" + (checked ? " checked" : "")).add(
+		final UiCommon checkbox = div("ui checkbox" + (checked ? " checked" : "")).add(
 				element("input")
 						.attr("type", "checkbox")
 						.attr("name", name)
 						.attr("checked", checked)
-				)
-				.enable(SemanticUiScripts.CHECKBOX);
+				);
+		return checkbox.observe(() -> SemanticUiScripts.checkbox(checkbox.node));
 	}
 
 	// ====================================================================================================
@@ -830,8 +810,8 @@ public class SemanticUi {
 	 *            info / warning / error / success /positive / negative,
 	 */
 	public static UiCommon message(final String... variations) {
-		return div("ui " + join(variations) + "message")
-				.enable(SemanticUiScripts.MESSAGE_CLOSE);
+		final UiCommon msg = div("ui " + join(variations) + "message");
+		return msg.observe(() -> SemanticUiScripts.messageClose(msg.node));
 	}
 
 	// ====================================================================================================

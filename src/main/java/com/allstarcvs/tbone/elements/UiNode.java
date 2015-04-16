@@ -2,7 +2,6 @@ package com.allstarcvs.tbone.elements;
 
 import static com.allstarcvs.tbone.TBone.*;
 
-import org.teavm.dom.core.Node;
 import org.teavm.dom.events.EventListener;
 import org.teavm.dom.html.HTMLElement;
 
@@ -14,19 +13,16 @@ import com.allstarcvs.tbone.wrappers.JQuery;
 public class UiNode<T extends UiNode<?>> {
 
 	protected final HTMLElement node;
-	protected long scriptFlags = 0;
 
 	protected UiNode(final HTMLElement node) {
 		this.node = node;
-		scriptFlags = 0;
 	}
 
 	protected UiNode(final UiNode<?> domNode) {
 		node = domNode.node;
-		scriptFlags = domNode.scriptFlags;
 	}
 
-	public Node node() {
+	public HTMLElement node() {
 		return node;
 	}
 
@@ -48,7 +44,6 @@ public class UiNode<T extends UiNode<?>> {
 	public T add(final UiNode<?>... children) {
 		for (final UiNode<?> d : children) {
 			node.appendChild(d.node);
-			scriptFlags |= d.scriptFlags;
 		}
 		return (T) this;
 	}
@@ -61,11 +56,6 @@ public class UiNode<T extends UiNode<?>> {
 			add(view.render());
 			view.onShow();
 		}
-		return (T) this;
-	}
-
-	public T enable(final long scriptFlag) {
-		scriptFlags |= scriptFlag;
 		return (T) this;
 	}
 
@@ -112,6 +102,10 @@ public class UiNode<T extends UiNode<?>> {
 		return (T) this;
 	}
 
+	public T data(final String name, final long l) {
+		return data(name, Long.toString(l));
+	}
+
 	public T style(final String value) {
 		return attr("style", value);
 	}
@@ -125,6 +119,11 @@ public class UiNode<T extends UiNode<?>> {
 
 	public T attr(final String attr, final boolean flag) {
 		if (flag) attr(attr, "");
+		return (T) this;
+	}
+
+	public T observe(final Runnable script) {
+		TBone.observe(this, script);
 		return (T) this;
 	}
 

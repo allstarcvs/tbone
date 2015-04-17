@@ -97,13 +97,17 @@ public class UiNode<T extends UiNode<?>> {
 		return (T) this;
 	}
 
+	public T attr(final String attr, final int value) {
+		return attr(attr, Integer.toString(value));
+	}
+
 	public T data(final String name, final String value) {
 		node.setAttribute("data-" + name, value);
 		return (T) this;
 	}
 
-	public T data(final String name, final long l) {
-		return data(name, Long.toString(l));
+	public T data(final String name, final int value) {
+		return data(name, Integer.toString(value));
 	}
 
 	public T style(final String value) {

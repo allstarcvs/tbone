@@ -558,22 +558,7 @@ public class SemanticUi {
 	 *            fluid
 	 */
 	public static UiDropdown selectionDropdown(final Object value, final InputEventHandler changeHandler) {
-
-		final UiCommon container = div("menu");
-		final UiCommon placeholder = div("default text");
-		final UiInput result = new UiInput(element("input").attr("type", "hidden")).value(value);
-
-		final UiCommon dropdown = div("ui fluid selection dropdown").add(
-				result,
-				placeholder,
-				icon("dropdown"),
-				container);
-
-		final DropdownSettings settings = (DropdownSettings) TBone.globals.newObject();
-		if (changeHandler != null) settings.setOnChange((v, n) -> changeHandler.handle(result));
-		dropdown.observe(() -> initDropdown(dropdown.node, settings));
-
-		return new UiDropdown(dropdown, container, placeholder, result);
+		return UiDropdown.create(value, changeHandler);
 	}
 
 	public static UiDropdown selectionDropdown(final Object value) {
@@ -585,16 +570,6 @@ public class SemanticUi {
 		return selectionDropdown(null, null);
 	}
 
-	public static UiCommon dropdownOption(final Object value, final String text) {
-		final UiCommon item = div("ui item").text(text);
-		if (value == null) return item;
-		return item.attr("data-value", value.toString());
-	}
-
-	public static UiCommon dropdownOption(final String text) {
-		return dropdownOption(null, text);
-	}
-
 	/**
 	 * Content: options
 	 *
@@ -604,8 +579,7 @@ public class SemanticUi {
 	 */
 	public static UiCommon select(final String... variations) {
 		final UiCommon dropdown = element("select").attr("class", "ui " + join(variations) + "dropdown");
-		final DropdownSettings options = (DropdownSettings) TBone.globals.newObject();
-		return dropdown.observe(() -> initDropdown(dropdown.node, options));
+		return dropdown.observe(() -> initDropdown(dropdown.node));
 	}
 
 	public static UiCommon option(final String value) {
@@ -1034,12 +1008,12 @@ public class SemanticUi {
 	// scripts
 	// ====================================================================================================
 
-	@JavaScriptBody(args = { "e", "o" }, body = "$(e).dropdown(o)")
-	private static native void initDropdown(HTMLElement ele, DropdownSettings options);
+	@JavaScriptBody(args = { "e" }, body = "$(e).dropdown()")
+	static native void initDropdown(HTMLElement ele);
 
 	@JavaScriptBody(args = { "e" }, body = "$(e).checkbox()")
-	private static native void initCheckbox(HTMLElement ele);
+	static native void initCheckbox(HTMLElement ele);
 
 	@JavaScriptBody(args = { "e" }, body = "$(e).on('click', function() { $(this).closest('.message').fadeOut(); })")
-	private static native void initMessageClose(HTMLElement ele);
+	static native void initMessageClose(HTMLElement ele);
 }

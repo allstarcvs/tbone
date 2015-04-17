@@ -1,21 +1,15 @@
 package com.allstarcvs.tbone;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.java.html.js.JavaScriptBody;
 
 import org.teavm.dom.ajax.XMLHttpRequest;
-import org.teavm.dom.core.Node;
-import org.teavm.dom.core.NodeList;
 import org.teavm.dom.html.HTMLDocument;
 import org.teavm.dom.html.HTMLElement;
 import org.teavm.jso.JS;
 import org.teavm.jso.JSObject;
 
 import com.allstarcvs.tbone.elements.UiNode;
-import com.allstarcvs.tbone.mutations.MutationObserver;
-import com.allstarcvs.tbone.mutations.MutationObserverOptions;
+import com.allstarcvs.tbone.utils.MutationSummary;
 import com.allstarcvs.tbone.wrappers.Globals;
 import com.allstarcvs.tbone.wrappers.JQuery;
 import com.allstarcvs.tbone.wrappers.Page;
@@ -77,39 +71,15 @@ public class TBone {
 	// DOM Events - Mutation Observer
 	// ====================================================================================================
 
-	private static final Map<Integer, Runnable> handlers = new HashMap<>();
-	private static int nextId = 0;
-
 	/**
 	 * Start the mutation observer for UiNodes.
 	 */
 	public static void startObserver() {
-		final MutationObserver mo = globals.createMutationObserver(mutations -> {
-			for (int i = 0; i < mutations.getLength(); i++) {
-				final NodeList<Node> addedNodes = mutations.get(i).getAddedNodes();
-				for (int j = 0; j < addedNodes.getLength(); j++) {
-					jquery((HTMLElement) addedNodes.get(j))
-							.find("[data-tbone-id]")
-							.each((index, e) -> {
-								final int myId = Integer.valueOf(e.getAttribute("data-tbone-id"));
-								if (handlers.containsKey(myId)) {
-									handlers.get(myId).run();
-									handlers.remove(myId);
-								}
-							});
-				}
-			}
-		});
-		final MutationObserverOptions options = (MutationObserverOptions) globals.newObject();
-		options.setSubtree(true);
-		options.setChildList(true);
-		mo.observe(document.getBody(), options);
+		MutationSummary.init();
 	}
 
 	public static void observe(final UiNode<?> node, final Runnable handler) {
-		final int myId = nextId++;
-		node.data("tbone-id", myId);
-		handlers.put(myId, handler);
+		MutationSummary.observe(node, handler);
 	}
 
 	// ====================================================================================================

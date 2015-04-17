@@ -19,6 +19,21 @@ public class UiDropdown extends UiNode<UiDropdown> implements ValueContainer {
 		return this;
 	}
 
+	public UiDropdown options(final String... values) {
+		for (final String value : values) {
+			this.option(value);
+		}
+		return this;
+	}
+
+	public UiDropdown option(final String value) {
+		return add(SemanticUi.dropdownOption(value, value));
+	}
+
+	public UiDropdown option(final String value, final String name) {
+		return add(SemanticUi.dropdownOption(name, value));
+	}
+
 	@Override
 	public UiDropdown text(final String value) {
 		placeholder.text(value);

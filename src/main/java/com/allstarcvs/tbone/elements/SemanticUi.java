@@ -1,6 +1,9 @@
 package com.allstarcvs.tbone.elements;
 
 import static com.allstarcvs.tbone.elements.UiNode.*;
+import net.java.html.js.JavaScriptBody;
+
+import org.teavm.dom.html.HTMLElement;
 
 import com.allstarcvs.tbone.TBone;
 
@@ -554,7 +557,7 @@ public class SemanticUi {
 	 * @param variations
 	 *            fluid
 	 */
-	public static UiDropdown selectionDropdown(final Object value, final DropdownChangeEventHandler changeHandler) {
+	public static UiDropdown selectionDropdown(final Object value, final InputEventHandler changeHandler) {
 
 		final UiCommon container = div("menu");
 		final UiCommon placeholder = div("default text");
@@ -567,8 +570,8 @@ public class SemanticUi {
 				container);
 
 		final DropdownSettings settings = (DropdownSettings) TBone.globals.newObject();
-		if (changeHandler != null) settings.setOnChange(changeHandler);
-		dropdown.observe(() -> SemanticUiScripts.dropdown(dropdown.node, settings));
+		if (changeHandler != null) settings.setOnChange((v, n) -> changeHandler.handle(result));
+		dropdown.observe(() -> initDropdown(dropdown.node, settings));
 
 		return new UiDropdown(dropdown, container, placeholder, result);
 	}
@@ -602,7 +605,7 @@ public class SemanticUi {
 	public static UiCommon select(final String... variations) {
 		final UiCommon dropdown = element("select").attr("class", "ui " + join(variations) + "dropdown");
 		final DropdownSettings options = (DropdownSettings) TBone.globals.newObject();
-		return dropdown.observe(() -> SemanticUiScripts.dropdown(dropdown.node, options));
+		return dropdown.observe(() -> initDropdown(dropdown.node, options));
 	}
 
 	public static UiCommon option(final String value) {
@@ -622,7 +625,7 @@ public class SemanticUi {
 						.attr("name", name)
 						.attr("checked", checked)
 				);
-		return checkbox.observe(() -> SemanticUiScripts.checkbox(checkbox.node));
+		return checkbox.observe(() -> initCheckbox(checkbox.node));
 	}
 
 	/**
@@ -636,7 +639,7 @@ public class SemanticUi {
 						.attr("name", name)
 						.attr("checked", checked)
 				);
-		return checkbox.observe(() -> SemanticUiScripts.checkbox(checkbox.node));
+		return checkbox.observe(() -> initCheckbox(checkbox.node));
 	}
 
 	// ====================================================================================================
@@ -811,7 +814,7 @@ public class SemanticUi {
 	 */
 	public static UiCommon message(final String... variations) {
 		final UiCommon msg = div("ui " + join(variations) + "message");
-		return msg.observe(() -> SemanticUiScripts.messageClose(msg.node));
+		return msg.observe(() -> initMessageClose(msg.node));
 	}
 
 	// ====================================================================================================
@@ -1026,4 +1029,17 @@ public class SemanticUi {
 	public static UiCommon actions(final String... variations) {
 		return div(join(variations) + "actions");
 	}
+
+	// ====================================================================================================
+	// scripts
+	// ====================================================================================================
+
+	@JavaScriptBody(args = { "e", "o" }, body = "$(e).dropdown(o)")
+	private static native void initDropdown(HTMLElement ele, DropdownSettings options);
+
+	@JavaScriptBody(args = { "e" }, body = "$(e).checkbox()")
+	private static native void initCheckbox(HTMLElement ele);
+
+	@JavaScriptBody(args = { "e" }, body = "$(e).on('click', function() { $(this).closest('.message').fadeOut(); })")
+	private static native void initMessageClose(HTMLElement ele);
 }

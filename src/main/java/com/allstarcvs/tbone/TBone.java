@@ -206,6 +206,9 @@ public class TBone {
 	@JavaScriptBody(args = { "o" }, body = "console.log(o)")
 	public static native void log(JSObject[] obj);
 
+	@JavaScriptBody(args = { "o" }, body = "console.log(o)")
+	public static native void log(String msg);
+
 	public static String asString(final JSObject object, final String field) {
 		final JSObject obj = JS.get(object, JS.wrap(field));
 		if (obj == null) return null;
@@ -218,12 +221,16 @@ public class TBone {
 		return text;
 	}
 
-	public static int asInt(final JSObject object, final String field) {
-		return JS.unwrapInt(JS.get(object, JS.wrap(field)));
+	public static Integer asInt(final JSObject object, final String field) {
+		final JSObject obj = JS.get(object, JS.wrap(field));
+		if (obj == null) return null;
+		return JS.unwrapInt(obj);
 	}
 
-	public static double asDouble(final JSObject object, final String field) {
-		return JS.unwrapDouble(JS.get(object, JS.wrap(field)));
+	public static Double asDouble(final JSObject object, final String field) {
+		final JSObject obj = JS.get(object, JS.wrap(field));
+		if (obj == null) return null;
+		return JS.unwrapDouble(obj);
 	}
 
 }

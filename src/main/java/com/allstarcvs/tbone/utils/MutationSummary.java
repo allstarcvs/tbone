@@ -3,9 +3,9 @@ package com.allstarcvs.tbone.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.teavm.dom.core.Element;
 import org.teavm.dom.core.Node;
 import org.teavm.dom.core.NodeList;
-import org.teavm.dom.html.HTMLElement;
 import org.teavm.jso.JSArray;
 import org.teavm.jso.JSConstructor;
 import org.teavm.jso.JSFunctor;
@@ -31,25 +31,25 @@ public class MutationSummary {
 	public static void init() {
 
 		final Instance mo = ((MyGlobal) TBone.globals).createMutationObserver(mutations -> {
-			for (int i = 0; i < mutations.getLength(); i++) {
-				final NodeList<Node> addedNodes = mutations.get(i).getAddedNodes();
-				for (int j = 0; j < addedNodes.getLength(); j++) {
-					TBone.jquery((HTMLElement) addedNodes.get(j))
-							.find("[" + DATA_TBONE_ID + "]")
-							.each((index, e) -> {
-								final int myId = Integer.valueOf(e.getAttribute(DATA_TBONE_ID));
-								if (handlers.containsKey(myId)) {
-									handlers.get(myId).run();
-									handlers.remove(myId); // housekeeping
-								}
-							});
-				}
-			}
+			// some how using the mutations will miss the direct children added to the body
+			TBone.jquery(TBone.document.getBody())
+					.find("[" + DATA_TBONE_ID + "]")
+					.each((index, e) -> executeOnce(e));
 		});
 		final Settings options = (Settings) TBone.globals.newObject();
 		options.setSubtree(true);
 		options.setChildList(true);
 		mo.observe(TBone.document.getBody(), options);
+	}
+
+	private static void executeOnce(final Element ele) {
+		final int myId = Integer.valueOf(ele.getAttribute(DATA_TBONE_ID));
+		if (!handlers.containsKey(myId)) return;
+		handlers.get(myId).run();
+		handlers.remove(myId); // housekeeping
+
+		// FIXME shall we remove the DATA_TBONE_ID attribute as well?
+		ele.removeAttribute(DATA_TBONE_ID);
 	}
 
 	/**

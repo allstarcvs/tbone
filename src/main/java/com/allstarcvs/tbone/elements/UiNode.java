@@ -54,7 +54,6 @@ public class UiNode<T extends UiNode<?>> {
 	public T add(final View... views) {
 		for (final View view : views) {
 			add(view.render());
-			view.onShow();
 		}
 		return (T) this;
 	}

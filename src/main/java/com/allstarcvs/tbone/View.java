@@ -13,24 +13,15 @@ public abstract class View {
 	protected abstract UiNode<?> onRender();
 
 	/**
-	 * Override this method to execute scripts after showing this view. Be sure to call super.onShow() to execute the
-	 * default semantic-ui scripts.
+	 * @see TBone.observe()
 	 */
-	public void onShow() {
-		// TBone library uses MutationObserver to run scripts on show.
+	@Deprecated
+	protected final void onShow() {
+		// do not override
 	}
 
 	public final void show(final View view) {
 		if (el == null) return;
 		el.clear().add(view);
-	}
-
-	/**
-	 * Install a lambda function to be executed after this.onShow()
-	 */
-	public View onShow(final Runnable lambda) {
-		this.onShow();
-		lambda.run();
-		return this;
 	}
 }

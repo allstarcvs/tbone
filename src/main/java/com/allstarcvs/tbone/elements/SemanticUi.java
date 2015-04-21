@@ -579,7 +579,7 @@ public class SemanticUi {
 	 */
 	public static UiCommon select(final String... variations) {
 		final UiCommon dropdown = element("select").attr("class", "ui " + join(variations) + "dropdown");
-		return dropdown.observe(() -> initDropdown(dropdown.node));
+		return dropdown.ready(() -> initDropdown(dropdown.node));
 	}
 
 	public static UiCommon option(final String value) {
@@ -599,7 +599,7 @@ public class SemanticUi {
 						.attr("name", name)
 						.attr("checked", checked)
 				);
-		return checkbox.observe(() -> initCheckbox(checkbox.node));
+		return checkbox.ready(() -> initCheckbox(checkbox.node));
 	}
 
 	/**
@@ -613,7 +613,7 @@ public class SemanticUi {
 						.attr("name", name)
 						.attr("checked", checked)
 				);
-		return checkbox.observe(() -> initCheckbox(checkbox.node));
+		return checkbox.ready(() -> initCheckbox(checkbox.node));
 	}
 
 	// ====================================================================================================
@@ -788,7 +788,7 @@ public class SemanticUi {
 	 */
 	public static UiCommon message(final String... variations) {
 		final UiCommon msg = div("ui " + join(variations) + "message");
-		return msg.observe(() -> initMessageClose(msg.node));
+		return msg.ready(() -> initMessageClose(msg.node));
 	}
 
 	// ====================================================================================================

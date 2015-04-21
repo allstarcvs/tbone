@@ -125,14 +125,14 @@ public class UiNode<T extends UiNode<?>> {
 		return (T) this;
 	}
 
-	public T observe(final Runnable script) {
-		TBone.observe(this, script);
-		return (T) this;
-	}
-
 	// ====================================================================================================
 	// Actions
 	// ====================================================================================================
+
+	public T ready(final Runnable script) {
+		TBone.observe(this, script);
+		return (T) this;
+	}
 
 	public T click(final EventListener listener) {
 		node.addEventListener("click", listener);

@@ -95,7 +95,7 @@ public class UiDropdown extends UiNode<UiDropdown> implements ValueContainer {
 
 		final Settings settings = (Settings) TBone.globals.newObject();
 		if (changeHandler != null) settings.setOnChange((v, n) -> changeHandler.handle(result));
-		dropdown.observe(() -> initDropdown(dropdown.node, settings));
+		dropdown.ready(() -> initDropdown(dropdown.node, settings));
 
 		return new UiDropdown(dropdown, container, placeholder, result);
 	}

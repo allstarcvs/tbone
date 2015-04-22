@@ -26,4 +26,8 @@ public interface JQuery extends JSObject {
 
 	public JQuery each(JQueryFindCallback callback);
 
+	public JQuery children();
+
+	public JQuery children(String selector);
+
 }

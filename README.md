@@ -1,6 +1,3 @@
-# tbone
-Framework for building web clients using Java (based on TeaVM)
-
 # Summary
 
 TeaVM (http://www.teavm.org) empowers Java developers to write browser applications without using Applet.  It's a powerful game changer that marries the richness of the Java ecosystem with the reach of web clients.  The TBone library attempts to provide useful tools on top of TeaVM similar to how BackBone (http://backbonejs.org) gives structures to web applications, hence the name TBone.

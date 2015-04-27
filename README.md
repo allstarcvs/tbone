@@ -73,7 +73,3 @@ Finally, include the javascripts and stylesheets in index.html.
 </html>
 
 ```
-
-
-Include Page.js (https://visionmedia.github.io/page.js/) to provide client-side routing.
-

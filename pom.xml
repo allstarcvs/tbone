@@ -10,7 +10,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<teavm.version>0.2.1</teavm.version>
-		<retrolambda.version>2.0.1</retrolambda.version>
+		<retrolambda.version>2.0.2</retrolambda.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -57,12 +57,20 @@
 		</dependency>
 	</dependencies>
 
+	<distributionManagement>
+  		<snapshotRepository>
+    		<id>ossrh</id>
+    		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 		<!-- download source -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 				</configuration>
@@ -70,8 +78,9 @@
  
       <!-- Configure Java compiler to use Java 7 syntax  -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -97,7 +106,9 @@
 
 			<!--  include source when install -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+      			<version>2.4</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -111,6 +122,56 @@
             		<attach>true</attach>
         		</configuration>
 			</plugin>
+
+			<!--  include javadoc when install -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+      			<version>2.10.3</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+        		<configuration>
+            		<attach>true</attach>
+        			<additionalparam>-Xdoclint:none</additionalparam>
+        		</configuration>
+			</plugin>
+
+			<!-- Sonatype Deployment -->
+    		<plugin>
+      			<groupId>org.sonatype.plugins</groupId>
+      			<artifactId>nexus-staging-maven-plugin</artifactId>
+      			<version>1.6.5</version>
+      			<extensions>true</extensions>
+      			<configuration>
+        			<serverId>ossrh</serverId>
+        			<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        			<autoReleaseAfterClose>true</autoReleaseAfterClose>
+      			</configuration>
+    		</plugin>
+
+    		<plugin>
+      			<groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-gpg-plugin</artifactId>
+      			<version>1.6</version>
+      			<executions>
+        			<execution>
+          				<id>sign-artifacts</id>
+          				<phase>verify</phase>
+          				<goals>
+            				<goal>sign</goal>
+          				</goals>
+        			</execution>
+      			</executions>
+    		</plugin>
+
+
 		</plugins>
 
 

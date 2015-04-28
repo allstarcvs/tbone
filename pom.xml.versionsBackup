@@ -4,7 +4,7 @@
 
 	<groupId>com.allstarcvs</groupId>
 	<artifactId>tbone</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<!-- Metadata required my sonatype : http://central.sonatype.org/pages/requirements.html -->

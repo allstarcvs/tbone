@@ -185,16 +185,6 @@ public class TBone {
 	}
 
 	// ====================================================================================================
-	// html5 local storage
-	// ====================================================================================================
-
-	@JavaScriptBody(args = { "k", "o" }, body = "if(typeof(Storage) !== 'undefined') { localStorage.setItem(k,o);}")
-	public static native void localPut(String key, String obj);
-
-	@JavaScriptBody(args = { "k" }, body = "if(typeof(Storage) !== 'undefined') { return localStorage.getItem(k);}")
-	public static native String localGet(String key);
-
-	// ====================================================================================================
 	// Utilities
 	// ====================================================================================================
 

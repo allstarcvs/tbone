@@ -35,8 +35,8 @@
 	<!-- Project properties -->
 	<properties>
 		<java.version>1.8</java.version>
-		<teavm.version>0.2.1</teavm.version>
-		<retrolambda.version>2.0.2</retrolambda.version>
+		<teavm.version>0.3.1</teavm.version>
+		<retrolambda.version>2.0.5</retrolambda.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
